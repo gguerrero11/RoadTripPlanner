@@ -10,7 +10,21 @@ import Foundation
 import MapKit
 
 struct Trip {
-    var stops: [Stop]
+    var startLocation: Stop
+    var destination: Stop?
+    var stops: [Stop]?
+    
+    init(name: String, start: MKMapPoint, notes: String?) {
+        startLocation = Stop(name: name, location: start, notes: notes)
+    }
+    
+    mutating func addDestination(name: String, dest: MKMapPoint, notes: String?) {
+        destination = Stop(name: name, location: dest, notes: notes)
+    }
+    
+    mutating func addStop(name: String, location: MKMapPoint, notes: String?) {
+        stops?.append(Stop(name: name, location: location, notes: notes))
+    }
 }
 
 struct Stop {
