@@ -10,31 +10,32 @@ import Foundation
 import MapKit
 
 struct Trip {
-    var startLocation: Stop
-    var destination: Stop?
-    var stops: [Stop]?
+    var startLocation: Location
+    var destination: Location?
+    var stops: [Location]?
     
-    init(name: String, start: CLLocationCoordinate2D, notes: String?) {
-        startLocation = Stop(name: name, location: start, notes: notes)
+    init(name: String, start: CLLocationCoordinate2D, dest: CLLocationCoordinate2D?) {
+        startLocation = Location(name: "nameStart", coordinate: start, notes: nil)
+        if let dest = dest { destination = Location(name: "nameStop", coordinate: dest, notes: nil) }
     }
     
     mutating func addDestination(name: String, dest: CLLocationCoordinate2D, notes: String?) {
-        destination = Stop(name: name, location: dest, notes: notes)
+        destination = Location(name: name, coordinate: dest, notes: notes)
     }
     
     mutating func addStop(name: String, location: CLLocationCoordinate2D, notes: String?) {
-        stops?.append(Stop(name: name, location: location, notes: notes))
+        stops?.append(Location(name: name, coordinate: location, notes: notes))
     }
 }
 
-class Stop: NSObject, MKAnnotation {
+class Location: NSObject, MKAnnotation {
     var coordinate: CLLocationCoordinate2D
     var name: String
     var notes: String?
     
-    init(name: String, location: CLLocationCoordinate2D, notes: String?) {
+    init(name: String, coordinate: CLLocationCoordinate2D, notes: String?) {
         self.name = name
-        self.coordinate = location
+        self.coordinate = coordinate
         self.notes = notes
     }
 }
