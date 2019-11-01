@@ -7,8 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		130F96AF236BCFE800B11978 /* TripViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130F96AE236BCFE800B11978 /* TripViewController.swift */; };
+		130F96B1236BD53C00B11978 /* SearchAddressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130F96B0236BD53C00B11978 /* SearchAddressViewController.swift */; };
 		13470E1C23693A5E00CC1260 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13470E1B23693A5E00CC1260 /* AppDelegate.swift */; };
-		13470E1E23693A5E00CC1260 /* TripListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13470E1D23693A5E00CC1260 /* TripListViewController.swift */; };
+		13470E1E23693A5E00CC1260 /* TripListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13470E1D23693A5E00CC1260 /* TripListTableViewController.swift */; };
 		13470E2123693A5E00CC1260 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 13470E1F23693A5E00CC1260 /* Main.storyboard */; };
 		13470E2323693A5F00CC1260 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13470E2223693A5F00CC1260 /* Assets.xcassets */; };
 		13470E2623693A5F00CC1260 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 13470E2423693A5F00CC1260 /* LaunchScreen.storyboard */; };
@@ -27,9 +29,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		130F96AE236BCFE800B11978 /* TripViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripViewController.swift; sourceTree = "<group>"; };
+		130F96B0236BD53C00B11978 /* SearchAddressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAddressViewController.swift; sourceTree = "<group>"; };
 		13470E1823693A5E00CC1260 /* RoadTripper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RoadTripper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13470E1B23693A5E00CC1260 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		13470E1D23693A5E00CC1260 /* TripListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripListViewController.swift; sourceTree = "<group>"; };
+		13470E1D23693A5E00CC1260 /* TripListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripListTableViewController.swift; sourceTree = "<group>"; };
 		13470E2023693A5E00CC1260 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		13470E2223693A5F00CC1260 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		13470E2523693A5F00CC1260 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -80,9 +84,11 @@
 			isa = PBXGroup;
 			children = (
 				13470E1B23693A5E00CC1260 /* AppDelegate.swift */,
-				13470E1D23693A5E00CC1260 /* TripListViewController.swift */,
+				13470E1D23693A5E00CC1260 /* TripListTableViewController.swift */,
+				130F96AE236BCFE800B11978 /* TripViewController.swift */,
 				13470E3B23693AD900CC1260 /* Trip.swift */,
 				13470E1F23693A5E00CC1260 /* Main.storyboard */,
+				130F96B0236BD53C00B11978 /* SearchAddressViewController.swift */,
 				13470E2223693A5F00CC1260 /* Assets.xcassets */,
 				13470E2423693A5F00CC1260 /* LaunchScreen.storyboard */,
 				13470E2723693A5F00CC1260 /* Info.plist */,
@@ -201,7 +207,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				13470E3C23693AD900CC1260 /* Trip.swift in Sources */,
-				13470E1E23693A5E00CC1260 /* TripListViewController.swift in Sources */,
+				130F96B1236BD53C00B11978 /* SearchAddressViewController.swift in Sources */,
+				130F96AF236BCFE800B11978 /* TripViewController.swift in Sources */,
+				13470E1E23693A5E00CC1260 /* TripListTableViewController.swift in Sources */,
 				13470E1C23693A5E00CC1260 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
