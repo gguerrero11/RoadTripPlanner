@@ -36,14 +36,18 @@
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <segue destination="HBY-CH-Zqf" kind="show" identifier="segueTrip" id="mRw-TR-lkN"/>
+                                    <segue destination="HBY-CH-Zqf" kind="show" identifier="segueTripAdd" id="mRw-TR-lkN"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
                         <sections/>
                     </tableView>
                     <navigationItem key="navigationItem" title="Road Trips" id="hOG-sG-8kB">
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="eVj-9V-NmO"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="eVj-9V-NmO">
+                            <connections>
+                                <action selector="newTripPressed:" destination="bug-zf-MH6" id="fGA-bz-NZq"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YPO-qu-MGV" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -68,16 +72,16 @@
                                                 <rect key="frame" x="10" y="30" width="394" height="744"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="center" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="wSP-DJ-rEa">
-                                                        <rect key="frame" x="0.0" y="0.0" width="394" height="63.5"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="394" height="67"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Start Location" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UCk-i1-TGn">
-                                                                <rect key="frame" x="140.5" y="0.0" width="113" height="28.5"/>
+                                                                <rect key="frame" x="140.5" y="0.0" width="113" height="30"/>
                                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Oe9-Oi-9do">
-                                                                <rect key="frame" x="10" y="35.5" width="374" height="28"/>
+                                                                <rect key="frame" x="10" y="37" width="374" height="30"/>
                                                                 <nil key="textColor"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                 <textInputTraits key="textInputTraits"/>
@@ -92,16 +96,16 @@
                                                         </constraints>
                                                     </stackView>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="center" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="6ui-07-zfL">
-                                                        <rect key="frame" x="0.0" y="83.5" width="394" height="63.5"/>
+                                                        <rect key="frame" x="0.0" y="87" width="394" height="67"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Destination " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DBL-9V-M6a" userLabel="Destination">
-                                                                <rect key="frame" x="149.5" y="0.0" width="95.5" height="28.5"/>
+                                                                <rect key="frame" x="149.5" y="0.0" width="95.5" height="30"/>
                                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Otu-so-Kk6">
-                                                                <rect key="frame" x="10" y="35.5" width="374" height="28"/>
+                                                                <rect key="frame" x="10" y="37" width="374" height="30"/>
                                                                 <nil key="textColor"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                 <textInputTraits key="textInputTraits"/>
@@ -116,22 +120,22 @@
                                                         </constraints>
                                                     </stackView>
                                                     <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="ImT-J8-Rj5">
-                                                        <rect key="frame" x="0.0" y="167" width="394" height="329"/>
+                                                        <rect key="frame" x="0.0" y="174" width="394" height="322.5"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="347" id="Tye-kO-s0f"/>
                                                         </constraints>
                                                     </mapView>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="fou-eF-hCk">
-                                                        <rect key="frame" x="0.0" y="516" width="394" height="228"/>
+                                                        <rect key="frame" x="0.0" y="516.5" width="394" height="227.5"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Stops" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C39-S2-M8z" userLabel="Notes Label">
-                                                                <rect key="frame" x="0.0" y="0.0" width="394" height="19"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="394" height="20.5"/>
                                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="SgC-Vu-oRr">
-                                                                <rect key="frame" x="0.0" y="19" width="394" height="209"/>
+                                                                <rect key="frame" x="0.0" y="20.5" width="394" height="207"/>
                                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <prototypes>
                                                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="stopCell" textLabel="k3d-cm-qSQ" detailTextLabel="ppJ-H4-bJf" style="IBUITableViewCellStyleSubtitle" id="iOg-Yw-gtd">
@@ -161,7 +165,7 @@
                                                                             <segue destination="qka-P6-DIK" kind="show" identifier="segueStop" id="6mn-h9-cVx"/>
                                                                         </connections>
                                                                     </tableViewCell>
-                                                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="nEV-Hq-MQb">
+                                                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="addStopCell" id="nEV-Hq-MQb">
                                                                         <rect key="frame" x="0.0" y="72" width="394" height="44"/>
                                                                         <autoresizingMask key="autoresizingMask"/>
                                                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="nEV-Hq-MQb" id="VbD-oG-jzq">
