@@ -22,11 +22,11 @@ struct Trip {
     }
     
     mutating func addDestination(name: String, dest: CLLocationCoordinate2D, notes: String?) {
-    destination = TripLocation(name: name, coordinate: dest, notes: notes)
+        destination = TripLocation(name: name, coordinate: dest, notes: notes)
     }
     
     mutating func addStop(name: String, location: CLLocationCoordinate2D, notes: String?) {
-    stops?.append(TripLocation(name: name, coordinate: location, notes: notes))
+        stops?.append(TripLocation(name: name, coordinate: location, notes: notes))
     }
 }
 

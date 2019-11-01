@@ -35,9 +35,6 @@
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
-                                <connections>
-                                    <segue destination="HBY-CH-Zqf" kind="show" identifier="segueTripAdd" id="mRw-TR-lkN"/>
-                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <sections/>
@@ -49,10 +46,13 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <segue destination="HBY-CH-Zqf" kind="show" identifier="segueTrip" id="mo2-4v-tCz"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YPO-qu-MGV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="495" y="146"/>
+            <point key="canvasLocation" x="501" y="146"/>
         </scene>
         <!--Trip View Controller-->
         <scene sceneID="96I-6r-Npr">

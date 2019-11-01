@@ -10,7 +10,7 @@ import UIKit
 import MapKit
 
 class TripViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, MKMapViewDelegate {
-
+    
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var stopsTableView: UITableView!
     
@@ -22,9 +22,9 @@ class TripViewController: UIViewController, UITableViewDelegate, UITableViewData
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        trip = Trip(name: "Something", start: CLLocationCoordinate2DMake(40.7127, -74.0059), dest: CLLocationCoordinate2DMake(37.783333, -122.416667))
+        guard let trip = trip else { showError(string: "Really bad error. Passed in nil Trip"); return }
+        title = trip.nameOfTrip
         
-        guard let trip = trip else { return }
         startTextField.text = trip.startLocation?.name
         destTextField.text = trip.destination?.name
         stopsTableView.delegate = self
@@ -37,6 +37,13 @@ class TripViewController: UIViewController, UITableViewDelegate, UITableViewData
         mapView.showAnnotations(masterTrip, animated: true)
         
         getDirections()
+    }
+    
+    func showError(string: String) {
+        let error = UIAlertController.init(title: "Error", message: string, preferredStyle: .alert)
+        let doneAction = UIAlertAction(title: "Not Cool", style: .default, handler: nil)
+        error.addAction(doneAction)
+        present(error, animated: true, completion: nil)
     }
     
     func getDirections() {
@@ -75,7 +82,7 @@ class TripViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        var result = trip?.stops?.count ?? 0
+        let result = trip?.stops?.count ?? 0
         return result + 1 // last cell used to add stops
     }
     
