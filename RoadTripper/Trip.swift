@@ -13,7 +13,7 @@ struct Trip {
     var nameOfTrip: String
     var startLocation: TripLocation?
     var destination: TripLocation?
-    var stops: [TripLocation]?
+    var stops = [TripLocation]()
     
     init(name: String, start: CLLocationCoordinate2D?, dest: CLLocationCoordinate2D?) {
         nameOfTrip = name
@@ -26,7 +26,7 @@ struct Trip {
     }
     
     mutating func addStop(name: String, location: CLLocationCoordinate2D, notes: String?) {
-        stops?.append(TripLocation(name: name, coordinate: location, notes: notes))
+        stops.append(TripLocation(name: name, coordinate: location, notes: notes))
     }
 }
 

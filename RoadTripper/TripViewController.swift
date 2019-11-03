@@ -30,6 +30,7 @@ class TripViewController: UIViewController, MKMapViewDelegate {
         
         stopsTableView.delegate = self
         stopsTableView.dataSource = self
+        stopsTableView.sizeToFit()
         
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
@@ -39,7 +40,7 @@ class TripViewController: UIViewController, MKMapViewDelegate {
         stopsTableView.delegate = self
         stopsTableView.dataSource = self
         
-        initializeMap(withTrip: trip)
+        refreshMap()
         getDirections()
     }
     
@@ -49,8 +50,8 @@ class TripViewController: UIViewController, MKMapViewDelegate {
         destTextField.text = trip.destination?.name
     }
     
-    func initializeMap(withTrip trip: Trip) {
-        let masterTrip = getMasterTrip(trip: trip)
+    func refreshMap() {
+        let masterTrip = getMasterTrip()
         mapView.showsUserLocation = true
         mapView.delegate = self
         mapView.addAnnotations(masterTrip)
@@ -85,11 +86,11 @@ class TripViewController: UIViewController, MKMapViewDelegate {
         }
     }
     
-    func getMasterTrip(trip: Trip)->[MKAnnotation] {
+    func getMasterTrip()->[MKAnnotation] {
         var result = [MKAnnotation]()
-        if let start = trip.startLocation { result.append(start) }
-        if let stops = trip.stops { result.append(contentsOf: stops) }
-        if let dest = trip.destination { result.append(dest) }
+        if let start = trip?.startLocation { result.append(start) }
+        if let stops = trip?.stops { result.append(contentsOf: stops) }
+        if let dest = trip?.destination { result.append(dest) }
         return result
     }
     
@@ -97,6 +98,11 @@ class TripViewController: UIViewController, MKMapViewDelegate {
         let renderer = MKPolylineRenderer(polyline: overlay as! MKPolyline)
         renderer.strokeColor = UIColor.blue
         return renderer
+    }
+    
+    @IBAction func addStopPressed(_ sender: Any) {
+        isStartLocation = nil
+        performSegue(withIdentifier: "segueSearchAddress", sender: nil)
     }
     
     @IBAction func startBeginEditing(_ sender: Any) {
@@ -131,18 +137,24 @@ extension TripViewController: SearchAddressViewControllerDelegate {
             }
         } else {
             // Is a stop
-            trip?.stops?.append(tripLocation)
+            trip?.addStop(name: tripLocation.name ?? "Unknown", location: tripLocation.coordinate, notes: nil)
+            stopsTableView.reloadData()
         }
+        refreshMap()
     }
 }
 
 extension TripViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return trip?.stops?.count ?? 0
+        return trip?.stops.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return tableView.dequeueReusableCell(withIdentifier: "addStopCell")!
+        let cell = tableView.dequeueReusableCell(withIdentifier: "stopCell")!
+        if let stop = trip?.stops[indexPath.row] {
+            cell.textLabel?.text = stop.name
+        }
+        return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

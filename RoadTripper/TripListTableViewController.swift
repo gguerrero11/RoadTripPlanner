@@ -9,6 +9,7 @@
 import UIKit
 
 var trips = [Trip]()
+
 let segueTripIdentifier = "segueTrip"
 
 class TripListTableViewController: UITableViewController, UIAlertViewDelegate {
