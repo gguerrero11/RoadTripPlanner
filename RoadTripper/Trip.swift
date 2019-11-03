@@ -33,12 +33,11 @@ struct Trip {
 class TripLocation: NSObject, MKAnnotation {
     var coordinate: CLLocationCoordinate2D
     var notes: String?
-    var name: String {
-        get { return MKPlacemark(coordinate: coordinate).title ?? "\(String(coordinate.latitude)), \(String(coordinate.longitude))" }
-    }
+    var name: String?
     
     init(name: String, coordinate: CLLocationCoordinate2D, notes: String?) {
         self.coordinate = coordinate
         self.notes = notes
+        self.name = name
     }
 }

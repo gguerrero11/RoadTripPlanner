@@ -31,7 +31,7 @@ class TripListTableViewController: UITableViewController, UIAlertViewDelegate {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "tripCell") as! UITableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "tripCell")!
         cell.textLabel?.text = trips[indexPath.row].nameOfTrip
         return cell
     }

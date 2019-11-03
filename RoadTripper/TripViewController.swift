@@ -16,10 +16,11 @@ class TripViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var startTextField: UITextField!
     @IBOutlet weak var destTextField: UITextField!
     
+    var trip: Trip?
+    var isStartLocation: Bool?
     var addressSearchController: UISearchController?
     let locationManager = CLLocationManager()
     let segueSearchAddressIndentifier = "segueSearchAddress"
-    var trip: Trip?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,14 +35,18 @@ class TripViewController: UIViewController, MKMapViewDelegate {
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestLocation()
-        
-        startTextField.text = trip.startLocation?.name
-        destTextField.text = trip.destination?.name
+
         stopsTableView.delegate = self
         stopsTableView.dataSource = self
         
         initializeMap(withTrip: trip)
         getDirections()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        guard let trip = trip else { showError(string: "Really bad error. Passed in nil Trip"); return }
+        startTextField.text = trip.startLocation?.name
+        destTextField.text = trip.destination?.name
     }
     
     func initializeMap(withTrip trip: Trip) {
@@ -96,23 +101,42 @@ class TripViewController: UIViewController, MKMapViewDelegate {
     
     @IBAction func startBeginEditing(_ sender: Any) {
         startTextField.endEditing(true)
+        isStartLocation = true
         performSegue(withIdentifier: "segueSearchAddress", sender: nil)
     }
     
     @IBAction func destinationBeginEditing(_ sender: Any) {
         destTextField.endEditing(true)
+        isStartLocation = false
         performSegue(withIdentifier: "segueSearchAddress", sender: nil)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "segueSearchAddress" {
             let searchVC = segue.destination as! SearchAddressViewController
-                searchVC.mapView = mapView
+            searchVC.mapView = mapView
+            searchVC.delegate = self
         }
     }
 }
 
-extension TripViewController : UITableViewDelegate, UITableViewDataSource {
+extension TripViewController: SearchAddressViewControllerDelegate {
+    func selectedTripLocation(tripLocation: TripLocation) {
+        if let isStartLocation = isStartLocation {
+            // Is a start or a destination
+            if isStartLocation {
+                trip?.startLocation = tripLocation
+            } else {
+                trip?.destination = tripLocation
+            }
+        } else {
+            // Is a stop
+            trip?.stops?.append(tripLocation)
+        }
+    }
+}
+
+extension TripViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return trip?.stops?.count ?? 0
     }
@@ -122,8 +146,6 @@ extension TripViewController : UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        var stopCount = trip?.stops?.count ?? 0
-        
     }
 }
 
@@ -136,12 +158,12 @@ extension TripViewController : CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.first {
-            print("location:: (location)")
+            print("location:: \(location)")
         }
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print("error:: (error)")
+        print("error:: \(error)")
     }
 }
 
