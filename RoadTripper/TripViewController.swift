@@ -9,14 +9,16 @@
 import UIKit
 import MapKit
 
-class TripViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, MKMapViewDelegate {
+class TripViewController: UIViewController, MKMapViewDelegate {
     
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var stopsTableView: UITableView!
-    
     @IBOutlet weak var startTextField: UITextField!
     @IBOutlet weak var destTextField: UITextField!
     
+    var addressSearchController: UISearchController?
+    let locationManager = CLLocationManager()
+    let segueSearchAddressIndentifier = "segueSearchAddress"
     var trip: Trip?
     
     override func viewDidLoad() {
@@ -25,18 +27,29 @@ class TripViewController: UIViewController, UITableViewDelegate, UITableViewData
         guard let trip = trip else { showError(string: "Really bad error. Passed in nil Trip"); return }
         title = trip.nameOfTrip
         
+        stopsTableView.delegate = self
+        stopsTableView.dataSource = self
+        
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.requestLocation()
+        
         startTextField.text = trip.startLocation?.name
         destTextField.text = trip.destination?.name
         stopsTableView.delegate = self
         stopsTableView.dataSource = self
         
+        initializeMap(withTrip: trip)
+        getDirections()
+    }
+    
+    func initializeMap(withTrip trip: Trip) {
         let masterTrip = getMasterTrip(trip: trip)
         mapView.showsUserLocation = true
         mapView.delegate = self
         mapView.addAnnotations(masterTrip)
         mapView.showAnnotations(masterTrip, animated: true)
-        
-        getDirections()
     }
     
     func showError(string: String) {
@@ -81,45 +94,55 @@ class TripViewController: UIViewController, UITableViewDelegate, UITableViewData
         return renderer
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let result = trip?.stops?.count ?? 0
-        return result + 1 // last cell used to add stops
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var stopCount = trip?.stops?.count ?? 0
-        stopCount += 1 // last cell used to add stops
-        if indexPath.row == stopCount {
-            return tableView.dequeueReusableCell(withIdentifier: "addStopCell") as! UITableViewCell
-        } else {
-            return tableView.dequeueReusableCell(withIdentifier: "stopCell") as! UITableViewCell
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        var stopCount = trip?.stops?.count ?? 0
-        stopCount += 1 // last cell used to add stops
-        if indexPath.row == stopCount {
-            // add Stop
-        }
-    }
-    
     @IBAction func startBeginEditing(_ sender: Any) {
+        startTextField.endEditing(true)
         performSegue(withIdentifier: "segueSearchAddress", sender: nil)
     }
     
     @IBAction func destinationBeginEditing(_ sender: Any) {
+        destTextField.endEditing(true)
         performSegue(withIdentifier: "segueSearchAddress", sender: nil)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if (segue.identifier == "segueSearchAddress") {
-//            if segue.destination is SearchAddressViewController {
-//            }
+        if segue.identifier == "segueSearchAddress" {
+            let searchVC = segue.destination as! SearchAddressViewController
+                searchVC.mapView = mapView
+        }
+    }
+}
+
+extension TripViewController : UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return trip?.stops?.count ?? 0
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        return tableView.dequeueReusableCell(withIdentifier: "addStopCell")!
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        var stopCount = trip?.stops?.count ?? 0
+        
+    }
+}
+
+extension TripViewController : CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if status == .authorizedWhenInUse {
+            locationManager.requestLocation()
         }
     }
     
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.first {
+            print("location:: (location)")
+        }
+    }
     
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("error:: (error)")
+    }
 }
 
 

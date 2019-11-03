@@ -9,38 +9,54 @@
 import UIKit
 import MapKit
 
-class SearchAddressViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-
-    @IBOutlet weak var searchTableView: UITableView!
-    @IBOutlet weak var textField: UITextField!
+class SearchAddressViewController: UITableViewController {
+    
+    var matchingItems: [MKMapItem] = []
+    var mapView: MKMapView?
+    var searchController: UISearchController?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        searchTableView.delegate = self
-        searchTableView.dataSource = self
-        textField.becomeFirstResponder()
+        searchController = UISearchController(searchResultsController: self)
+        searchController?.searchResultsUpdater = self
+        searchController?.hidesNavigationBarDuringPresentation = true
+        definesPresentationContext = true
+    }
+}
+
+extension SearchAddressViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let mapView = mapView,
+            let searchBarText = searchController.searchBar.text else { return }
+        let request = MKLocalSearch.Request()
+        request.naturalLanguageQuery = searchBarText
+        request.region = mapView.region
+        let search = MKLocalSearch(request: request)
+        search.start { response, _ in
+            guard let response = response else {
+                return
+            }
+            self.matchingItems = response.mapItems
+            self.tableView.reloadData()
+        }
+    }
+}
+
+extension SearchAddressViewController {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return matchingItems.count
     }
     
-    @IBAction func valueChanged(_ sender: Any) {
-        // 3 second timer
-        // perform list check to refresh tableView
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // select address
         dismiss(animated: true, completion: nil)
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 0
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "addressSearchCell") as! UITableViewCell
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "addressCell")!
+        let selectedItem = matchingItems[indexPath.row].placemark
+        cell.textLabel?.text = selectedItem.name
         return cell
-    }
-    
-    @IBAction func donePressed(_ sender: Any) {
-        dismiss(animated: true, completion: nil)
     }
 }
 
