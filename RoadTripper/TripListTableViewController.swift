@@ -9,6 +9,7 @@
 import UIKit
 
 var trips = [Trip]()
+var currentIndex: IndexPath?
 
 let segueTripIdentifier = "segueTrip"
 
@@ -24,6 +25,7 @@ class TripListTableViewController: UITableViewController, UIAlertViewDelegate {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedTrip = trips[indexPath.row]
+        currentIndex = indexPath
         performSegue(withIdentifier: segueTripIdentifier, sender: selectedTrip)
     }
     
@@ -51,6 +53,7 @@ class TripListTableViewController: UITableViewController, UIAlertViewDelegate {
             guard let name = nameDialog.textFields?.first?.text else { return }
             let newTrip = Trip(name: name, start: nil, dest: nil)
             trips.append(newTrip)
+            currentIndex = IndexPath(row: trips.endIndex - 1, section: 0)
             self.performSegue(withIdentifier: segueTripIdentifier, sender: newTrip)
         }
         nameDialog.addAction(doneAction)
@@ -59,12 +62,18 @@ class TripListTableViewController: UITableViewController, UIAlertViewDelegate {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == segueTripIdentifier) {
-            guard let newTrip = sender as? Trip else { showError(string: "Bad Trip"); return }
             guard let tripVC = segue.destination as? TripViewController else { showError(string: "Bad View Controller"); return }
-            tripVC.trip = newTrip
+            tripVC.trip = sender as? Trip
+            tripVC.delegate = self
         }
     }
 }
 
+extension TripListTableViewController: TripViewControllerDelegate {
+    func valueChanged(trip: Trip) {
+        guard let row = currentIndex?.row else { showError(string: "Bad index in Trip list VC"); return }
+        trips[row] = trip
+    }
+}
 
 

@@ -9,8 +9,13 @@
 import UIKit
 import MapKit
 
+protocol TripViewControllerDelegate {
+    func valueChanged(trip: Trip)
+}
+
 class TripViewController: UIViewController, MKMapViewDelegate {
     
+    @IBOutlet weak var activityIcon: UIActivityIndicatorView!
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var stopsTableView: UITableView!
     @IBOutlet weak var startTextField: UITextField!
@@ -18,13 +23,15 @@ class TripViewController: UIViewController, MKMapViewDelegate {
     
     var trip: Trip?
     var isStartLocation: Bool?
+    var tripPolylines = [MKPolyline]()
+    var delegate: TripViewControllerDelegate?
     var addressSearchController: UISearchController?
     let locationManager = CLLocationManager()
     let segueSearchAddressIndentifier = "segueSearchAddress"
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        activityIcon.startAnimating()
         guard let trip = trip else { showError(string: "Really bad error. Passed in nil Trip"); return }
         title = trip.nameOfTrip
         
@@ -41,7 +48,7 @@ class TripViewController: UIViewController, MKMapViewDelegate {
         stopsTableView.dataSource = self
         
         refreshMap()
-        getDirections()
+        activityIcon.stopAnimating()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -56,34 +63,9 @@ class TripViewController: UIViewController, MKMapViewDelegate {
         mapView.delegate = self
         mapView.addAnnotations(masterTrip)
         mapView.showAnnotations(masterTrip, animated: true)
-    }
-    
-    func showError(string: String) {
-        let error = UIAlertController.init(title: "Error", message: string, preferredStyle: .alert)
-        let doneAction = UIAlertAction(title: "Not Cool", style: .default, handler: nil)
-        error.addAction(doneAction)
-        present(error, animated: true, completion: nil)
-    }
-    
-    func getDirections() {
-        guard let startCoordinate = trip?.startLocation?.coordinate else { return }
-        guard let destCorrdinate = trip?.destination?.coordinate else { return }
-        
-        let request = MKDirections.Request()
-        request.source = MKMapItem(placemark: MKPlacemark(coordinate: startCoordinate, addressDictionary: nil))
-        request.destination = MKMapItem(placemark: MKPlacemark(coordinate: destCorrdinate, addressDictionary: nil))
-        request.transportType = .automobile
-        
-        let directions = MKDirections(request: request)
-        
-        directions.calculate { [unowned self] response, error in
-            guard let unwrappedResponse = response else { return }
-            
-            for route in unwrappedResponse.routes {
-                self.mapView.addOverlay(route.polyline)
-                self.mapView.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
-            }
-        }
+        clearCurrentPolylines()
+        getMasterDirections(fromList: masterTrip)
+
     }
     
     func getMasterTrip()->[MKAnnotation] {
@@ -92,6 +74,55 @@ class TripViewController: UIViewController, MKMapViewDelegate {
         if let stops = trip?.stops { result.append(contentsOf: stops) }
         if let dest = trip?.destination { result.append(dest) }
         return result
+    }
+    
+    func getMasterDirections(fromList: [MKAnnotation]) {
+        guard fromList.count > 1 else { return }
+        for x in 1..<fromList.count {
+            let stop = fromList[x]
+            let nextStop = fromList[x-1]
+            collectTripBetween(pointA: stop.coordinate, pointB: nextStop.coordinate)
+        }
+    }
+    
+    func collectTripBetween(pointA: CLLocationCoordinate2D, pointB: CLLocationCoordinate2D){
+        DispatchQueue.main.async {
+            self.activityIcon.startAnimating()
+        }
+        let request = MKDirections.Request()
+        request.source = MKMapItem(placemark: MKPlacemark(coordinate: pointA, addressDictionary: nil))
+        request.destination = MKMapItem(placemark: MKPlacemark(coordinate: pointB, addressDictionary: nil))
+        request.transportType = .automobile
+        
+        let directions = MKDirections(request: request)
+        directions.calculate { [unowned self] response, error in
+            guard let unwrappedResponse = response else { return }
+            for route in unwrappedResponse.routes {
+                self.tripPolylines.append(route.polyline)
+            }
+            self.drawPolylines()
+        }
+    }
+    
+    func drawPolylines() {
+        DispatchQueue.main.async {
+            self.tripPolylines.forEach { (polyline) in
+                self.mapView.addOverlay(polyline)
+            }
+            self.activityIcon.stopAnimating()
+        }
+    }
+    
+    func clearCurrentPolylines() {
+        mapView.removeOverlays(tripPolylines)
+        tripPolylines = []
+    }
+    
+    func showError(string: String) {
+        let error = UIAlertController.init(title: "Error", message: string, preferredStyle: .alert)
+        let doneAction = UIAlertAction(title: "Not Cool", style: .default, handler: nil)
+        error.addAction(doneAction)
+        present(error, animated: true, completion: nil)
     }
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
@@ -106,12 +137,18 @@ class TripViewController: UIViewController, MKMapViewDelegate {
     }
     
     @IBAction func startBeginEditing(_ sender: Any) {
+        if let startLocation = trip?.startLocation {
+            mapView.removeAnnotation(startLocation)
+        }
         startTextField.endEditing(true)
         isStartLocation = true
         performSegue(withIdentifier: "segueSearchAddress", sender: nil)
     }
     
     @IBAction func destinationBeginEditing(_ sender: Any) {
+        if let destination = trip?.destination {
+            mapView.removeAnnotation(destination)
+        }
         destTextField.endEditing(true)
         isStartLocation = false
         performSegue(withIdentifier: "segueSearchAddress", sender: nil)
@@ -137,8 +174,15 @@ extension TripViewController: SearchAddressViewControllerDelegate {
             }
         } else {
             // Is a stop
-            trip?.addStop(name: tripLocation.name ?? "Unknown", location: tripLocation.coordinate, notes: nil)
+            guard trip != nil else { showError(string: "Trip is nil when adding stop"); return }
+            if !(trip!.stops.contains(tripLocation)) {
+                trip!.addStop(name: tripLocation.name ?? "Unknown", location: tripLocation.coordinate, notes: nil)
+            }
             stopsTableView.reloadData()
+        }
+        
+        if let trip = trip {
+            delegate?.valueChanged(trip: trip)
         }
         refreshMap()
     }
