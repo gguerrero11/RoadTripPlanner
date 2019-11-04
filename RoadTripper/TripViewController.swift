@@ -14,7 +14,7 @@ protocol TripViewControllerDelegate {
     func defaultLocationSet(tripLocation: TripLocation?)
 }
 
-class TripViewController: UIViewController, MKMapViewDelegate {
+class TripViewController: UIViewController {
     
     @IBOutlet weak var activityIcon: UIActivityIndicatorView!
     @IBOutlet weak var mapView: MKMapView!
@@ -129,13 +129,7 @@ class TripViewController: UIViewController, MKMapViewDelegate {
         error.addAction(doneAction)
         present(error, animated: true, completion: nil)
     }
-    
-    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-        let renderer = MKPolylineRenderer(polyline: overlay as! MKPolyline)
-        renderer.strokeColor = UIColor.blue
-        return renderer
-    }
-    
+
     @IBAction func switchValueChanged(_ sender: Any) {
         let uiSwitch = sender as! UISwitch
         delegate?.defaultLocationSet(tripLocation: (uiSwitch.isOn) ? trip?.startLocation : nil)
@@ -179,6 +173,24 @@ class TripViewController: UIViewController, MKMapViewDelegate {
             let stopTuple = sender as! (main: TripLocation, prev: MKAnnotation?)
             stopVC.previousStop = stopTuple.prev
             stopVC.mainStop = stopTuple.main
+        }
+    }
+}
+
+extension TripViewController: MKMapViewDelegate {
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        let renderer = MKPolylineRenderer(polyline: overlay as! MKPolyline)
+        renderer.strokeColor = UIColor.blue
+        return renderer
+    }
+    
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        if let index = trip?.stops.firstIndex(of: view.annotation as! TripLocation) {
+            stopsTableView.selectRow(at: IndexPath(row: index, section: 0), animated: true, scrollPosition: .bottom)
+        } else {
+            if let deselectIndex = stopsTableView.indexPathForSelectedRow {
+                stopsTableView.deselectRow(at: deselectIndex, animated: true)
+            }
         }
     }
 }

@@ -320,12 +320,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <searchBar key="tableHeaderView" contentMode="redraw" id="pGG-MD-um1">
+                        <searchBar key="tableHeaderView" contentMode="redraw" id="ehH-pH-Bfs">
                             <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                             <textInputTraits key="textInputTraits"/>
                             <connections>
-                                <outlet property="delegate" destination="e5S-yd-vdi" id="fJk-g3-qRc"/>
+                                <outlet property="delegate" destination="e5S-yd-vdi" id="QeU-S8-Vmx"/>
                             </connections>
                         </searchBar>
                         <prototypes>
@@ -353,20 +353,10 @@
                         </connections>
                     </tableView>
                     <connections>
-                        <outlet property="searchBar" destination="pGG-MD-um1" id="7iF-9E-aZz"/>
-                        <outlet property="searchDisplayController" destination="lbj-52-PtQ" id="YKe-lD-Heb"/>
+                        <outlet property="gSearchBar" destination="ehH-pH-Bfs" id="MMj-2E-6Nf"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8WE-LO-2aa" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <searchDisplayController id="lbj-52-PtQ">
-                    <connections>
-                        <outlet property="delegate" destination="e5S-yd-vdi" id="DiS-yh-PpH"/>
-                        <outlet property="searchBar" destination="pGG-MD-um1" id="n3U-hH-DV0"/>
-                        <outlet property="searchContentsController" destination="e5S-yd-vdi" id="s5e-6H-JnD"/>
-                        <outlet property="searchResultsDataSource" destination="e5S-yd-vdi" id="8wh-5v-Evu"/>
-                        <outlet property="searchResultsDelegate" destination="e5S-yd-vdi" id="68S-la-HIQ"/>
-                    </connections>
-                </searchDisplayController>
             </objects>
             <point key="canvasLocation" x="1535" y="928"/>
         </scene>

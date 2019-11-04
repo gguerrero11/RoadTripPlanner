@@ -9,34 +9,28 @@
 import UIKit
 import MapKit
 
-var searchController: UISearchController?
-
 protocol SearchAddressViewControllerDelegate {
     func selectedTripLocation(tripLocation: TripLocation)
 }
 
 class SearchAddressViewController: UITableViewController {
-    
+        
+    @IBOutlet weak var gSearchBar: UISearchBar!
     var matchingItems: [MKMapItem] = []
     var mapView: MKMapView?
     var delegate: SearchAddressViewControllerDelegate?
     
-    @IBOutlet weak var searchBar: UISearchBar!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        searchController = UISearchController(searchResultsController: self)
-        guard let searchController = searchController else { return }
-        searchController.hidesNavigationBarDuringPresentation = false
-        searchController.searchResultsUpdater = self as? UISearchResultsUpdating
-        searchController.searchBar.delegate = self
+        gSearchBar.delegate = self
+        gSearchBar.becomeFirstResponder()
+        title = "Address Search"
         definesPresentationContext = true
     }
 }
 
 extension SearchAddressViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        guard searchController != nil else { return }
         guard let mapView = mapView,
             let searchBarText = searchBar.text else { return }
         let request = MKLocalSearch.Request()
