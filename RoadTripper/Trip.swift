@@ -21,10 +21,6 @@ struct Trip {
         if let dest = dest { destination = TripLocation(name: "nameStop", coordinate: dest, notes: nil) }
     }
     
-    mutating func addDestination(name: String, dest: CLLocationCoordinate2D, notes: String?) {
-        destination = TripLocation(name: name, coordinate: dest, notes: notes)
-    }
-    
     mutating func addStop(name: String, location: CLLocationCoordinate2D, notes: String?) {
         stops.append(TripLocation(name: name, coordinate: location, notes: notes))
     }

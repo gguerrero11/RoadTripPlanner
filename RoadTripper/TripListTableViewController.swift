@@ -14,30 +14,10 @@ var defaultLocation: TripLocation?
 
 let segueTripIdentifier = "segueTrip"
 
-class TripListTableViewController: UITableViewController, UIAlertViewDelegate {
+class TripListTableViewController: UITableViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         tableView.reloadData()
-    }
-    
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return trips.count
-    }
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let selectedTrip = trips[indexPath.row]
-        listCurrentIndex = indexPath
-        performSegue(withIdentifier: segueTripIdentifier, sender: selectedTrip)
-    }
-    
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "tripCell")!
-        cell.textLabel?.text = trips[indexPath.row].nameOfTrip
-        return cell
     }
     
     func showError(string: String) {
@@ -71,6 +51,28 @@ class TripListTableViewController: UITableViewController, UIAlertViewDelegate {
                 tripVC.trip?.startLocation = defaultLocation
             }
         }
+    }
+}
+
+extension TripListTableViewController {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return trips.count
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let selectedTrip = trips[indexPath.row]
+        listCurrentIndex = indexPath
+        performSegue(withIdentifier: segueTripIdentifier, sender: selectedTrip)
+    }
+    
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "tripCell")!
+        cell.textLabel?.text = trips[indexPath.row].nameOfTrip
+        return cell
     }
 }
 
