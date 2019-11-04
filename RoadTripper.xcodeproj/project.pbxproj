@@ -16,6 +16,7 @@
 		13470E2623693A5F00CC1260 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 13470E2423693A5F00CC1260 /* LaunchScreen.storyboard */; };
 		13470E3123693A5F00CC1260 /* RoadTripperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13470E3023693A5F00CC1260 /* RoadTripperTests.swift */; };
 		13470E3C23693AD900CC1260 /* Trip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13470E3B23693AD900CC1260 /* Trip.swift */; };
+		13E47F9C236FBCC800EA777C /* StopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E47F9B236FBCC800EA777C /* StopViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +43,7 @@
 		13470E3023693A5F00CC1260 /* RoadTripperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoadTripperTests.swift; sourceTree = "<group>"; };
 		13470E3223693A5F00CC1260 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		13470E3B23693AD900CC1260 /* Trip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trip.swift; sourceTree = "<group>"; };
+		13E47F9B236FBCC800EA777C /* StopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +88,7 @@
 				13470E1B23693A5E00CC1260 /* AppDelegate.swift */,
 				13470E1D23693A5E00CC1260 /* TripListTableViewController.swift */,
 				130F96AE236BCFE800B11978 /* TripViewController.swift */,
+				13E47F9B236FBCC800EA777C /* StopViewController.swift */,
 				13470E3B23693AD900CC1260 /* Trip.swift */,
 				13470E1F23693A5E00CC1260 /* Main.storyboard */,
 				130F96B0236BD53C00B11978 /* SearchAddressViewController.swift */,
@@ -206,6 +209,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				13E47F9C236FBCC800EA777C /* StopViewController.swift in Sources */,
 				13470E3C23693AD900CC1260 /* Trip.swift in Sources */,
 				130F96B1236BD53C00B11978 /* SearchAddressViewController.swift in Sources */,
 				130F96AF236BCFE800B11978 /* TripViewController.swift in Sources */,
@@ -375,6 +379,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Y5AY735344;
 				INFOPLIST_FILE = RoadTripper/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -393,6 +398,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Y5AY735344;
 				INFOPLIST_FILE = RoadTripper/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

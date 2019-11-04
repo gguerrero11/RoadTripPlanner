@@ -11,6 +11,7 @@ import MapKit
 
 protocol TripViewControllerDelegate {
     func valueChanged(trip: Trip)
+    func defaultLocationSet(tripLocation: TripLocation?)
 }
 
 class TripViewController: UIViewController, MKMapViewDelegate {
@@ -20,12 +21,15 @@ class TripViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var stopsTableView: UITableView!
     @IBOutlet weak var startTextField: UITextField!
     @IBOutlet weak var destTextField: UITextField!
+    @IBOutlet weak var defaultSwitch: UISwitch!
     
     var trip: Trip?
+    var selectedIndex: IndexPath?
     var isStartLocation: Bool?
     var tripPolylines = [MKPolyline]()
     var delegate: TripViewControllerDelegate?
     var addressSearchController: UISearchController?
+    var defaultLocation: TripLocation?
     let locationManager = CLLocationManager()
     let segueSearchAddressIndentifier = "segueSearchAddress"
     
@@ -34,6 +38,8 @@ class TripViewController: UIViewController, MKMapViewDelegate {
         activityIcon.startAnimating()
         guard let trip = trip else { showError(string: "Really bad error. Passed in nil Trip"); return }
         title = trip.nameOfTrip
+        
+        defaultSwitch.isOn = (defaultLocation != nil)
         
         stopsTableView.delegate = self
         stopsTableView.dataSource = self
@@ -65,7 +71,6 @@ class TripViewController: UIViewController, MKMapViewDelegate {
         mapView.showAnnotations(masterTrip, animated: true)
         clearCurrentPolylines()
         getMasterDirections(fromList: masterTrip)
-
     }
     
     func getMasterTrip()->[MKAnnotation] {
@@ -131,6 +136,11 @@ class TripViewController: UIViewController, MKMapViewDelegate {
         return renderer
     }
     
+    @IBAction func switchValueChanged(_ sender: Any) {
+        let uiSwitch = sender as! UISwitch
+        delegate?.defaultLocationSet(tripLocation: (uiSwitch.isOn) ? trip?.startLocation : nil)
+    }
+    
     @IBAction func addStopPressed(_ sender: Any) {
         isStartLocation = nil
         performSegue(withIdentifier: "segueSearchAddress", sender: nil)
@@ -160,8 +170,29 @@ class TripViewController: UIViewController, MKMapViewDelegate {
             searchVC.mapView = mapView
             searchVC.delegate = self
         }
+        
+        if segue.identifier == "segueStop" {
+            
+            let stopVC = segue.destination as! StopViewController
+            stopVC.delegate = self
+            
+            let stopTuple = sender as! (main: TripLocation, prev: MKAnnotation?)
+            stopVC.previousStop = stopTuple.prev
+            stopVC.mainStop = stopTuple.main
+        }
     }
 }
+
+extension TripViewController: StopViewControllerDelegate {
+    func updatedNotes(string: String) {
+        guard let selectedIndex = selectedIndex else { showError(string: "Bad index"); return }
+        let selectedStop = trip?.stops[selectedIndex.row]
+        selectedStop?.notes = string
+        guard let trip = trip else { showError(string: "Bad trip can't return from updating notes"); return }
+        delegate?.valueChanged(trip: trip)
+    }
+}
+
 
 extension TripViewController: SearchAddressViewControllerDelegate {
     func selectedTripLocation(tripLocation: TripLocation) {
@@ -177,6 +208,7 @@ extension TripViewController: SearchAddressViewControllerDelegate {
             guard trip != nil else { showError(string: "Trip is nil when adding stop"); return }
             if !(trip!.stops.contains(tripLocation)) {
                 trip!.addStop(name: tripLocation.name ?? "Unknown", location: tripLocation.coordinate, notes: nil)
+                selectedIndex = IndexPath(row: trip!.stops.endIndex - 1, section: 0)
             }
             stopsTableView.reloadData()
         }
@@ -202,6 +234,17 @@ extension TripViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        selectedIndex = indexPath
+        let selectedStop = trip?.stops[indexPath.row]
+        var previousStop: MKAnnotation?
+        if (indexPath.row - 1) < 0 {
+            if let start = trip?.startLocation {
+                previousStop = start
+            }
+        } else {
+            previousStop = trip?.stops[indexPath.row - 1]
+        }
+        performSegue(withIdentifier: "segueStop", sender: (main: selectedStop, prev: previousStop))
     }
 }
 
